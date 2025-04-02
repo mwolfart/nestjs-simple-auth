@@ -1,0 +1,9 @@
+services:
+  db:
+    image: postgres:16.8-alpine3.20
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb
+    ports:
+      - 5452:5432
