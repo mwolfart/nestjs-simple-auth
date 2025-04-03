@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -40,19 +41,31 @@ export class PostsController {
 
   @RequiredRoles(Role.WRITER, Role.EDITOR, Role.READER)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const post = await this.postsService.findOne(id);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
   }
 
   @RequiredRoles(Role.EDITOR)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(id, updatePostDto);
+  async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    const post = await this.postsService.update(id, updatePostDto);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
   }
 
   @RequiredRoles(Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(id);
+  async remove(@Param('id') id: string) {
+    const post = await this.postsService.remove(id);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
   }
 }
